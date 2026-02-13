@@ -1,0 +1,44 @@
+//In Sword - attack
+local tool = script.Parent
+
+
+local debounce = false
+
+
+local damage = 25
+local canDamage = false
+
+tool.Activated:Connect(function()
+	canDamage = true
+	wait(0.3) 
+	canDamage = false
+end)
+
+tool.Handle.Touched:Connect(function(hit)
+	if not canDamage then return end
+
+	local character = hit.Parent
+	local humanoid = character:FindFirstChild("Humanoid")
+
+	if humanoid and character ~= tool.Parent then
+		humanoid:TakeDamage(damage)
+	end
+end)
+
+
+
+
+//in NPC weld Sword on hand
+local npc = script.Parent
+local sword = npc:WaitForChild("ClassicSword")
+
+local hand = npc:FindFirstChild("RightHand") or npc:FindFirstChild("Right Arm")
+local swordPart = sword:IsA("Model") and sword.PrimaryPart or sword
+
+local weld = Instance.new("WeldConstraint")
+weld.Part0 = hand
+weld.Part1 = swordPart
+weld.Parent = swordPart
+
+swordPart.CFrame = hand.CFrame * CFrame.new(0, -1, 0) * CFrame.Angles(0, math.rad(90), 0)
+
