@@ -8,3 +8,23 @@ UIS.InputBegan:Connect(function(input: InputObject, gameProsessEvent : boolean)
 	end
 	
 end)
+
+
+
+
+
+
+
+
+
+//In ServiceScriptSecrvice
+local event = game.ReplicatedStorage.RemoteEvent
+local anim = script.Animation
+
+event.OnServerEvent: Connect(function(player: Player, ...: any)
+	local character = player.Character
+	local humanoid = character:WaitForChild("Humanoid")
+	local animator = humanoid:WaitForChild("Animator")
+	local animationTrack = humanoid.Animator:LoadAnimation(anim)
+	animationTrack:Play()
+end)
