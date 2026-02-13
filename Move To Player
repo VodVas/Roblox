@@ -1,0 +1,83 @@
+local npc = script.Parent
+local humanoid = npc:WaitForChild("Humanoid")
+local root = npc:WaitForChild("HumanoidRootPart")
+
+
+local animator = humanoid:WaitForChild("Animator")
+
+local attackAnim = npc:WaitForChild("AttackAnimation")
+local attackTrack = animator:LoadAnimation(attackAnim)
+
+
+local Players = game:GetService("Players")
+
+local AGGRO_RADIUS = 40       -- радиус агра
+local ATTACK_DISTANCE = 4    -- дистанция удара
+local ATTACK_DAMAGE = 10
+local ATTACK_COOLDOWN = 1.2
+local THINK_DELAY = 0.2
+
+local canAttack = true
+local currentTarget = nil
+
+local function findTargetInRadius()
+	local nearestChar = nil
+	local nearestDist = AGGRO_RADIUS
+
+	for _, player in pairs(Players:GetPlayers()) do
+		local char = player.Character
+		if char and char:FindFirstChild("HumanoidRootPart") then
+			local charHumanoid = char:FindFirstChild("Humanoid")
+			if charHumanoid and charHumanoid.Health > 0 then
+				local dist = (char.HumanoidRootPart.Position - root.Position).Magnitude
+				if dist <= nearestDist then
+					nearestDist = dist
+					nearestChar = char
+				end
+			end
+		end
+	end
+
+	return nearestChar, nearestDist
+end
+
+local function attack(targetHumanoid)
+	if not canAttack then return end
+	canAttack = false
+	attackTrack:Play()
+	targetHumanoid:TakeDamage(ATTACK_DAMAGE)
+
+	task.delay(ATTACK_COOLDOWN, function()
+		canAttack = true
+	end)
+end
+
+
+while humanoid.Health > 0 do
+	task.wait(THINK_DELAY)
+
+	if not currentTarget then
+		currentTarget = findTargetInRadius()
+	end
+
+	if currentTarget
+		and currentTarget:FindFirstChild("HumanoidRootPart")
+		and currentTarget:FindFirstChild("Humanoid") then
+
+		local targetHumanoid = currentTarget.Humanoid
+		local targetRoot = currentTarget.HumanoidRootPart
+		local distance = (targetRoot.Position - root.Position).Magnitude
+
+		if targetHumanoid.Health <= 0 or distance > AGGRO_RADIUS then
+			currentTarget = nil
+			humanoid:Move(Vector3.zero)
+		else
+			if distance > ATTACK_DISTANCE then
+				humanoid:MoveTo(targetRoot.Position)
+			else
+				attack(targetHumanoid)
+			end
+		end
+	end
+end
+
