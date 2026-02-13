@@ -1,0 +1,27 @@
+local ServerStorage = game:GetService("ServerStorage")
+local npcTemplate = ServerStorage:WaitForChild("NPC")
+
+local spawnPoint = script.Parent
+local spawnDelay = 5 
+local maxNPCs = 3 
+
+while true do
+
+	task.wait(spawnDelay)
+
+	local count = 0
+	for _, npc in pairs(workspace:GetChildren()) do
+		if npc.Name == "NPC" then
+			count += 1
+		end
+	end
+
+	if count < maxNPCs then
+		local npcClone = npcTemplate:Clone()
+		npcClone.Parent = workspace
+		script.Parent.Fire.Enabled = true
+		npcClone:SetPrimaryPartCFrame(
+			spawnPoint.CFrame + Vector3.new(0, 3, 0)
+		)
+	end
+end
