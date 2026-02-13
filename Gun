@@ -1,0 +1,68 @@
+local Gun = script.Parent
+local Bomb = Gun:WaitForChild("Bomb")
+
+local reload = false
+
+function bam()
+	if reload then return end
+	reload = true
+
+	local character = Gun.Parent
+	local root = character:FindFirstChild("HumanoidRootPart")
+	if not root then return end
+
+	local Bullet = Bomb:Clone()
+
+	Gun.Bomb.Transparency = 1
+	Gun.Bomb.CanCollide = false
+
+	Bullet.CFrame = Bomb.CFrame
+	Bullet.Parent = workspace
+	Bullet.CanCollide = false
+	Bullet.Name = "BombFired"
+
+	local weld = Bullet:FindFirstChildWhichIsA("WeldConstraint")
+	if weld then weld:Destroy() end
+
+	local attachment = Instance.new("Attachment", Bullet)
+
+	local velocity = Instance.new("LinearVelocity")
+	velocity.Attachment0 = attachment
+	velocity.MaxForce = math.huge
+	velocity.VectorVelocity = root.CFrame.LookVector * 120
+	velocity.Parent = Bullet
+
+	Instance.new("Fire", Bullet)
+
+	local exploded = false
+
+	task.delay(0.2, function()
+		Bullet.CanCollide = true
+	end)
+
+	Bullet.Touched:Connect(function(hit)
+		if exploded then return end
+		if hit:IsDescendantOf(character) then return end
+
+		exploded = true
+
+		local explosion = Instance.new("Explosion")
+		explosion.Position = Bullet.Position
+		explosion.BlastRadius = 12
+		explosion.BlastPressure = 500000
+		explosion.DestroyJointRadiusPercent = 0
+		explosion.Parent = workspace
+
+		Bullet:Destroy()
+	end)
+
+	game:GetService("Debris"):AddItem(Bullet, 5)
+
+	task.wait(1)
+
+	Gun.Bomb.Transparency = 0
+	Gun.Bomb.CanCollide = true
+	reload = false
+end
+
+Gun.Activated:Connect(bam)
