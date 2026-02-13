@@ -1,0 +1,92 @@
+local ReplicatedStorage=game:GetService("ReplicatedStorage")
+
+local a = Instance.new("Accessory")
+a.Name = "HPGlasses"
+
+local handle = Instance.new("Part")
+handle.Name = "Handle"
+handle.Size = Vector3.new(1,1.6,1)
+handle.Parent = a
+
+local faceFrontAttachment = Instance.new("Attachment")
+faceFrontAttachment.Name = "FaceFrontAttachment"
+faceFrontAttachment.Position = Vector3.new(0,-0.24,-0.45)
+faceFrontAttachment.Parent = handle
+
+local mesh = Instance.new("SpecialMesh")
+mesh.Name = "Mesh"
+mesh.Scale = Vector3.new(1,1.3,1)
+mesh.MeshId = "rbxassetid://22053998"
+mesh.TextureId = "rbxassetid://22053986"
+mesh.Parent = handle
+
+a.Parent = ReplicatedStorage
+local b = Instance.new("Accessory")
+b.Name = "lPHat"
+
+local handle = Instance.new("Part")
+handle.Name = "Handle"
+handle.Size = Vector3.new(1,1.6,1)
+handle.Parent = b
+
+local HatAttachment = Instance.new("Attachment")
+HatAttachment.Name = "HatAttachment"
+HatAttachment.Position = Vector3.new(0,0,0)
+HatAttachment.Parent = handle
+
+local mesh = Instance.new("SpecialMesh")
+mesh.Name = "Mesh"
+mesh.Scale = Vector3.new(1, 1, 1)
+mesh.MeshId = "rbxassetid://101099213"
+mesh.TextureId = "rbxassetid://101098928"
+mesh.Parent = handle
+
+b.Parent = ReplicatedStorage
+local c = Instance.new("Accessory")
+c.Name = "oPWings"
+
+local handle = Instance.new("Part")
+handle.Name = "Handle"
+handle.Size = Vector3.new(1,1.6,1)
+handle.Parent = c
+
+local BodyBackAttachment = Instance.new("Attachment")
+BodyBackAttachment.Name = "BodyBackAttachment"
+BodyBackAttachment.Position = Vector3.new(0,0,1)
+BodyBackAttachment.Parent = handle
+
+local mesh = Instance.new("SpecialMesh")
+mesh.Name = "Mesh"
+mesh.Scale = Vector3.new(1, 1, 1)
+mesh.MeshId = "rbxassetid://215682815"
+mesh.TextureId = "rbxassetid://215682864"
+mesh.Parent = handle
+
+c.Parent = ReplicatedStorage
+
+
+
+
+//In Hat in ClickDetector
+local ReplicatedStorage=game:GetService("ReplicatedStorage")
+local accl=ReplicatedStorage:WaitForChild("lPHat")
+
+script.Parent.MouseClick:Connect(function( player )
+	player.Character.Humanoid:AddAccessory(accl:Clone())
+end)
+
+
+//InGlassies
+local ReplicatedStorage=game:GetService("ReplicatedStorage")
+local accl=ReplicatedStorage:WaitForChild("HPGlasses")
+script.Parent.MouseClick:Connect(function( player )
+	player.Character.Humanoid:AddAccessory(accl:Clone())
+end)
+
+//In Wings
+local ReplicatedStorage=game:GetService("ReplicatedStorage")
+local accl=ReplicatedStorage:WaitForChild("oPWings")
+
+script.Parent.MouseClick:Connect(function( player )
+	player.Character.Humanoid:AddAccessory(accl:Clone())
+end)
