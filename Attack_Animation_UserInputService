@@ -1,0 +1,10 @@
+local UIS = game:GetService("UserInputService")
+local player = game.Players.LocalPlayer
+local event = game.ReplicatedStorage.RemoteEvent
+
+UIS.InputBegan:Connect(function(input: InputObject, gameProsessEvent : boolean)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 and not gameProsessEvent then
+		event:FireServer("Attack")
+	end
+	
+end)
